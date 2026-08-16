@@ -1,17 +1,24 @@
 module id_stage(
-    input [31:0] instruction, 
-    input [31:0] pc,
-    output reg [31:0] reg_data1,
-    output reg [31:0] reg_data2,
-    output reg [4:0] rd,
-    output reg [6:0] opcode
+    input clk,
+    input [31:0] instruction,
+    input [4:0] wb_rd,
+    input [31:0] wb_data,
+    input wb_en,
+    output [31:0] reg_data1,
+    output [31:0] reg_data2,
+    output [4:0] rd,
+    output [6:0] opcode
 );
-    reg [31:0] registers [31:0]; // 32 registers
+    reg [31:0] registers [31:0];
 
-    always @(instruction) begin
-        rd = instruction[11:7];  // Extract rd field
-        reg_data1 = registers[instruction[19:15]];  // Read reg1
-        reg_data2 = registers[instruction[24:20]];  // Read reg2
-        opcode = instruction[6:0];  // Extract opcode
+    assign rd      = instruction[11:7];
+    assign opcode  = instruction[6:0];
+    assign reg_data1 = registers[instruction[19:15]];
+    assign reg_data2 = registers[instruction[24:20]];
+
+    // Synchronous register write
+    always @(posedge clk) begin
+        if (wb_en && (wb_rd != 5'b0))
+            registers[wb_rd] <= wb_data;
     end
 endmodule
