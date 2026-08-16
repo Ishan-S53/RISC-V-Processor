@@ -1,24 +1,30 @@
 module testbench();
-    reg clk, rst;
+    reg clk;
+    reg rst;
     wire [31:0] final_result;
 
-    // Instantiate the pipelined processor
+    // Instantiate Unit Under Test (UUT)
     pipelined_processor uut(
         .clk(clk),
         .rst(rst),
         .final_result(final_result)
     );
 
-    // Generate clock signal
+    // Clock Generation (10ns period)
     always begin
-        #5 clk = ~clk;  // Clock period of 10 units
+        #5 clk = ~clk;
     end
 
-    // Initialize and apply reset
     initial begin
         clk = 0;
         rst = 1;
-        #10 rst = 0;  // Release reset after 10 time units
-        #100 $finish;  // End simulation after 100 time units
+
+        // Apply reset for 20ns
+        #20 rst = 0;
+
+        // Monitor signals in simulation console
+        $monitor("Time: %0t ns | PC: %h | Final WB Result: %h", $time, uut.if_pc, final_result);
+
+        #200 $finish;
     end
 endmodule
