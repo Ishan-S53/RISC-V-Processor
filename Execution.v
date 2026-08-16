@@ -6,9 +6,10 @@ module ex_stage(
 );
     always @(*) begin
         case(opcode)
-            7'b0110011: result = reg_data1 + reg_data2;  // Example: ADD
-            7'b0000011: result = reg_data1 + reg_data2;  // Example: Load
-            default: result = 0;
+            7'b0110011: result = reg_data1 + reg_data2; // ADD (R-type)
+            7'b0000011: result = reg_data1 + reg_data2; // Address computation for Load
+            7'b0100011: result = reg_data1 + reg_data2; // Address computation for Store
+            default:    result = 32'b0;
         endcase
     end
 endmodule
