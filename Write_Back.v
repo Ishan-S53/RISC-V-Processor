@@ -1,12 +1,11 @@
 module wb_stage(
-    input [31:0] mem_result, 
-    input [4:0] rd, 
-    output reg [31:0] write_back_data
+    input [31:0] mem_result,
+    input [4:0] rd,
+    output [31:0] write_back_data,
+    output [4:0] wb_rd,
+    output wb_en
 );
-    reg [31:0] registers [31:0];
-
-    always @(*) begin
-        registers[rd] = mem_result;  // Write result back to register
-        write_back_data = registers[rd];
-    end
+    assign write_back_data = mem_result;
+    assign wb_rd = rd;
+    assign wb_en = 1'b1; // Simplified enable
 endmodule
